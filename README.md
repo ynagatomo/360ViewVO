@@ -20,7 +20,7 @@ This project shows some features of RealityKit in visionOS;
 
 ## References
 
-- Article related to this project: TBD
+- Article related to this project: https://atarayosd.medium.com/shadergraph-in-visionos-45598e49626c
 
 ## License
 
