@@ -1,0 +1,334 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["Sphere_Left", "Sphere_Right", "_GridMaterial", "SphereMaterial"]
+    def Sphere "Sphere_Right" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/SphereMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (5, 5, 5)
+        float3 xformOp:translate = (0.5, 1.5, -1.5)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Sphere "Sphere_Left" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/_GridMaterial/GridMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (-0.5, 1.5, -1.5)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def "_GridMaterial" (
+        active = true
+        references = @_GridMaterial.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        over "GridMaterial"
+        {
+            float2 ui:nodegraph:realitykit:subgraphOutputs:size = (181.5, 99)
+
+            over "MaterialXPreviewSurface"
+            {
+                float2 ui:nodegraph:node:size = (207.5, 307)
+            }
+
+            over "Remap"
+            {
+                float2 ui:nodegraph:node:size = (94, 181)
+            }
+
+            over "Fractional"
+            {
+                float2 ui:nodegraph:node:size = (154.5, 109)
+            }
+
+            over "Multiply"
+            {
+                float2 ui:nodegraph:node:size = (60, 36)
+            }
+
+            over "Combine3"
+            {
+                float2 ui:nodegraph:node:size = (145, 54)
+            }
+
+            over "Subtract"
+            {
+                float2 ui:nodegraph:node:size = (61.5, 36)
+            }
+
+            over "Absval"
+            {
+                float2 ui:nodegraph:node:size = (121.5, 53)
+            }
+
+            over "BaseColor"
+            {
+                float2 ui:nodegraph:node:size = (151, 53)
+            }
+
+            over "LineColor"
+            {
+                float2 ui:nodegraph:node:size = (151, 53)
+            }
+
+            over "Texcoord"
+            {
+                float2 ui:nodegraph:node:size = (180.5, 53)
+            }
+
+            over "LineCounts"
+            {
+                float2 ui:nodegraph:node:size = (151.5, 53)
+            }
+
+            over "LineWidths"
+            {
+                float2 ui:nodegraph:node:size = (150, 53)
+            }
+
+            over "Separate2"
+            {
+                float2 ui:nodegraph:node:size = (115, 127)
+            }
+
+            over "Min"
+            {
+                float2 ui:nodegraph:node:size = (113, 40)
+            }
+
+            over "Range"
+            {
+                float2 ui:nodegraph:node:size = (98, 217)
+            }
+        }
+    }
+
+    def Material "SphereMaterial"
+    {
+        asset inputs:ImageName (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-948.224, 337.3482)
+                    float2 sizeInSubgraph = (142, 53)
+                    int stackingOrderInSubgraph = 111
+                }
+            }
+        )
+        prepend token outputs:mtlx:surface.connect = </Root/SphereMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (474.0116, 71.7509)
+        float2 ui:nodegraph:realitykit:subgraphOutputs:size = (181.5, 99)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 170
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            float inputs:clearcoat
+            float inputs:clearcoatRoughness
+            color3f inputs:diffuseColor = (0, 0, 0) (
+                colorSpace = "srgb_texture"
+            )
+            color3f inputs:emissiveColor.connect = </Root/SphereMaterial/Combine3.outputs:out>
+            float inputs:ior
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:occlusion
+            float inputs:opacity.connect = </Root/SphereMaterial/Separate4.outputs:outa>
+            float inputs:opacityThreshold
+            float inputs:roughness = 0.8
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (244.30846, 164.27434)
+            float2 ui:nodegraph:node:size = (159.5, 307)
+            int ui:nodegraph:node:stackingOrder = 170
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["Advanced"]
+        }
+
+        def Shader "Time"
+        {
+            uniform token info:id = "ND_time_float"
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-1021.4961, 61.867188)
+            float2 ui:nodegraph:node:size = (122.5, 53)
+            int ui:nodegraph:node:stackingOrder = 79
+        }
+
+        def Shader "Cos"
+        {
+            uniform token info:id = "ND_cos_float"
+            float inputs:in.connect = </Root/SphereMaterial/Divide_1.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-742.4922, 62.246094)
+            float2 ui:nodegraph:node:size = (116, 40)
+            int ui:nodegraph:node:stackingOrder = 10
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-901.96344, -108.11414)
+            float2 ui:nodegraph:node:size = (133.5, 40)
+            int ui:nodegraph:node:stackingOrder = 125
+        }
+
+        def Shader "Separate3"
+        {
+            uniform token info:id = "ND_separate3_vector3"
+            float3 inputs:in.connect = </Root/SphereMaterial/Position.outputs:out>
+            float outputs:outx
+            float outputs:outy
+            float outputs:outz
+            float2 ui:nodegraph:node:pos = (-723.4451, -98.14115)
+            float2 ui:nodegraph:node:size = (115.5, 145)
+            int ui:nodegraph:node:stackingOrder = 123
+        }
+
+        def Shader "Constant"
+        {
+            uniform token info:id = "ND_constant_color4"
+            color4f inputs:value = (0.6642242, 0.66424006, 0.66423154, 0.2082471) (
+                colorSpace = "srgb_texture"
+            )
+            color4f outputs:out
+            float2 ui:nodegraph:node:pos = (-460.05823, 20.253504)
+            float2 ui:nodegraph:node:size = (151, 53)
+            int ui:nodegraph:node:stackingOrder = 195
+        }
+
+        def Shader "Ifgreater"
+        {
+            uniform token info:id = "ND_ifgreater_color4"
+            color4f inputs:in1.connect = </Root/SphereMaterial/Constant_1.outputs:out>
+            color4f inputs:in2.connect = </Root/SphereMaterial/Image.outputs:out>
+            float inputs:value1.connect = </Root/SphereMaterial/Separate3.outputs:outy>
+            float inputs:value2.connect = </Root/SphereMaterial/Multiply.outputs:out>
+            color4f outputs:out
+            float2 ui:nodegraph:node:pos = (-445.09656, 199.10072)
+            float2 ui:nodegraph:node:size = (109, 163)
+            int ui:nodegraph:node:stackingOrder = 199
+        }
+
+        def Shader "Image"
+        {
+            uniform token info:id = "ND_image_color4"
+            color4f inputs:default
+            asset inputs:file = @Theta360.JPG@
+            asset inputs:file.connect = </Root/SphereMaterial.inputs:ImageName>
+            string inputs:filtertype
+            float2 inputs:texcoord
+            string inputs:vaddressmode
+            color4f outputs:out
+            float2 ui:nodegraph:node:pos = (-698.7617, 427.54297)
+            float2 ui:nodegraph:node:size = (148.5, 199)
+            int ui:nodegraph:node:stackingOrder = 99
+        }
+
+        def Shader "Separate4"
+        {
+            uniform token info:id = "ND_separate4_color4"
+            color4f inputs:in.connect = </Root/SphereMaterial/Ifgreater_1.outputs:out>
+            float outputs:outa
+            float outputs:outb
+            float outputs:outg
+            float outputs:outr
+            float2 ui:nodegraph:node:pos = (-116.52747, 132.8759)
+            float2 ui:nodegraph:node:size = (115.5, 163)
+            int ui:nodegraph:node:stackingOrder = 170
+        }
+
+        def Shader "Combine3"
+        {
+            uniform token info:id = "ND_combine3_color3"
+            float inputs:in1.connect = </Root/SphereMaterial/Separate4.outputs:outr>
+            float inputs:in2.connect = </Root/SphereMaterial/Separate4.outputs:outg>
+            float inputs:in3.connect = </Root/SphereMaterial/Separate4.outputs:outb>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (48.273308, 76.684494)
+            float2 ui:nodegraph:node:size = (145, 54)
+            int ui:nodegraph:node:stackingOrder = 170
+        }
+
+        def Shader "Divide_1"
+        {
+            uniform token info:id = "ND_divide_float"
+            float inputs:in1.connect = </Root/SphereMaterial/Time.outputs:out>
+            float inputs:in2 = 2
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-881.3242, 30.347656)
+            float2 ui:nodegraph:node:size = (61.5, 36)
+            int ui:nodegraph:node:stackingOrder = 110
+        }
+
+        def Shader "Multiply"
+        {
+            uniform token info:id = "ND_multiply_float"
+            float inputs:in1.connect = </Root/SphereMaterial/Cos.outputs:out>
+            float inputs:in2 = 2
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-605.29095, 80.798164)
+            float2 ui:nodegraph:node:size = (60, 36)
+            int ui:nodegraph:node:stackingOrder = 120
+        }
+
+        def Shader "Add"
+        {
+            uniform token info:id = "ND_add_float"
+            float inputs:in1.connect = </Root/SphereMaterial/Multiply.outputs:out>
+            float inputs:in2 = 0.1
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-509.33234, -40.312435)
+            float2 ui:nodegraph:node:size = (61.5, 36.5)
+            int ui:nodegraph:node:stackingOrder = 197
+        }
+
+        def Shader "Ifgreater_1"
+        {
+            uniform token info:id = "ND_ifgreater_color4"
+            color4f inputs:in1.connect = </Root/SphereMaterial/Constant.outputs:out>
+            color4f inputs:in2.connect = </Root/SphereMaterial/Ifgreater.outputs:out>
+            float inputs:value1.connect = </Root/SphereMaterial/Separate3.outputs:outy>
+            float inputs:value2.connect = </Root/SphereMaterial/Add.outputs:out>
+            color4f outputs:out
+            float2 ui:nodegraph:node:pos = (-270.38922, -52.333057)
+            float2 ui:nodegraph:node:size = (113.5, 163)
+            int ui:nodegraph:node:stackingOrder = 201
+        }
+
+        def Shader "Constant_1"
+        {
+            uniform token info:id = "ND_constant_color4"
+            color4f inputs:value = (0.4513868, 0.99309605, 1, 1) (
+                colorSpace = "srgb_texture"
+            )
+            color4f outputs:out
+            float2 ui:nodegraph:node:pos = (-755.60565, 189.71454)
+            float2 ui:nodegraph:node:size = (155, 53)
+            int ui:nodegraph:node:stackingOrder = 187
+        }
+    }
+}
+
